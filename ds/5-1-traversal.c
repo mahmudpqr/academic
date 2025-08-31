@@ -5,6 +5,7 @@ typedef struct node{
     int data;
     struct node *next;
 }node;
+
 void add(node *nd[],int n){
     printf("enter elements: ");
     for(int i=0;i<n;i++){
@@ -62,3 +63,4 @@ int main(){
     }while(x==1);
     return 0;
 }
+
