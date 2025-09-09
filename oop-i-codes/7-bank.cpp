@@ -53,6 +53,7 @@ class AccountHolder:public SavingsAccount,public LoanAccount{
 public:
     AccountHolder(string nm,int id,float bl,float ir,float la):SavingsAccount(bl,ir),LoanAccount(la),Customer(nm,id){}
     void displayAllDetails(){
+        cout<< "\nCustomer Details:\n";
         displayCustomer();
         cout<< "Balance: "<<balance<<endl;
         cout<< "Interest Rate: "<<interestRate<< "%\n";
@@ -89,7 +90,6 @@ int main(){
     cout<< "Deposit Amount: ";
     cin>>dp;
 
-    cout<<endl;
     a.deposit(dp);
     a.displayAllDetails();
     return 0;
