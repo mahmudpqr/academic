@@ -30,6 +30,7 @@ int main(){
         printf("\nChoose action:");
         printf("\n1. Push\n2. Pop\n3. Exit\n");
         printf("\nEnter your choice: ");
+        
         int x;
         scanf("%d",&x);
 
