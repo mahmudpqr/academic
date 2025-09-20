@@ -37,7 +37,7 @@ int main(){
     scanf("%d",&n);
     int a[n],f=-1,r=-1;
 
-    do{
+    while(1){
         printf("\nChoose action:");
         printf("\n1. Insert\n2. Delete\n3. Exit\n");
         printf("\nEnter your choice: ");
@@ -47,7 +47,7 @@ int main(){
 
         if(x==1){
             int itm;
-            printf("\nEnter item to Insert: ");
+            printf("Enter item to Insert: ");
             scanf("%d",&itm);
             insert(a,n,&f,&r,itm);
         }
@@ -70,8 +70,7 @@ int main(){
             }
         }
         printf("\n");
-    }while(1);
-
+    }
     printf("\n");
     return 0;
 }

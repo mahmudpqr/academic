@@ -53,7 +53,7 @@ int main(){
     printf("\n=== Binary Tree Traversal ===\n");
     node* root=NULL;
 
-    do{
+    while(1){
         printf("\nChoose action:");
         printf("\n1. Create tree\n2. Preorder traversal\n3. Inorder traversal\n4. Postorder traversal\n5. Exit\n");
         printf("\nEnter your choice: ");
@@ -91,8 +91,7 @@ int main(){
         else{
             printf("\nInvalid choice!\n");
         }
-    }while(1);
-
+    }
     printf("\n");
     return 0;
 }
