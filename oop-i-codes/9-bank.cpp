@@ -8,39 +8,36 @@ class Customer{
     public:
     int customerID;
 
-    Customer(){
-        customerID=0;
-    }
-    Customer(string nm,int id){
-        name=nm;
+    Customer(){}
+    Customer(int id,string nm){
         customerID=id;
+        name=nm;
     }
     void displayCustomer(){
-        cout<<"\nName: "<<name;
         cout<<"\nCustomer ID: "<<customerID;
+        cout<<"\nName: "<<name;
     }
 };
 
 class SavingsAccount:virtual public Customer{
     protected:
-    float interestRate;
-    float balance;
+    double balance;
+    double interestRate;
 
     public:
-    SavingsAccount(){}
-    SavingsAccount(float bl,float ir){
+    SavingsAccount(double bl,double ir){
         balance=bl;
         interestRate=ir;
     }
     void deposit(){
-        float dp;
+        double dp;
         cout<<"Enter Deposit Amount: ";
         cin>>dp;
 
         balance+=dp;
         cout<<"\nDeposited: "<<dp<<" | Total Balance: "<<balance<<"\n";
     }
-    float calculateInterest(){
+    double calculateInterest(){
         return balance*interestRate/100;
     }
     void displaySavings(){
@@ -52,28 +49,26 @@ class SavingsAccount:virtual public Customer{
 
 class LoanAccount:virtual public Customer{
     protected:
-    float loanAmount;
-    float EMI;
+    double loanAmount;
+    double EMI;
 
     public:
-    LoanAccount(){}
-    LoanAccount(float la){
+    LoanAccount(double la){
         loanAmount=la;
     }
-    float calculateEMI(){
+    double calculateEMI(){
         EMI=loanAmount/12;
         return EMI;
     }
     void displayLoan(){
         cout<<"\nLoan Amount: "<<loanAmount;
-        cout<<"\nEMI: "<<calculateEMI()<<"\n";
+        cout<<"\nEMI (12 Months): "<<calculateEMI()<<"\n";
     }
 };
 
 class AccountHolder:public SavingsAccount,public LoanAccount{
     public:
-    AccountHolder(){}
-    AccountHolder(string nm,int id,float bl,float ir,float la):SavingsAccount(bl,ir),LoanAccount(la),Customer(nm,id){}
+    AccountHolder(int id,string nm,double bl,double ir,double la):Customer(id,nm),SavingsAccount(bl,ir),LoanAccount(la){}
     void displayAllDetails(){
         cout<< "\n--- Account Details ---";
         displayCustomer();
@@ -110,8 +105,8 @@ AccountHolder* findID(int id){
 }
 
 int main(){
-    a.emplace_back("Abdul Hamim Sheikh",5139,872000,3,190000);
-    a.emplace_back("Zakaria Chowdhury",3774,525000,5,250000);
+    a.emplace_back(5139,"Abdul Hamim Sheikh",872000,5,190000);
+    a.emplace_back(3774,"Zakaria Chowdhury",525000,3,250000);
     cout<<fixed<<setprecision(2);
 
     while(1){
@@ -128,22 +123,23 @@ int main(){
         cin>>ch;
 
         if(ch==1){
-            string nm;
-            cout<< "\nEnter Name: ";
-            cin.ignore();
-            getline(cin,nm);
-
             int id;
-            float bl,ir,la;
-
             while(1){
-                cout<<"Enter Customer ID: ";
+                cout<<"\nEnter Customer ID: ";
                 cin>>id;
                 if(findID(id)!=nullptr){
                     cout<<"Already in Use!\n";
                 }
                 else break;
             }
+
+            string nm;
+            cout<< "Enter Name: ";
+            cin.ignore();
+            getline(cin,nm);
+
+            double bl,ir,la;
+
             cout<<"Enter Balance: ";
             cin>>bl;
             cout<<"Enter Interest Rate %: ";
@@ -151,7 +147,7 @@ int main(){
             cout<<"Enter Loan Amount: ";
             cin>>la;
 
-            a.emplace_back(nm,id,bl,ir,la);
+            a.emplace_back(id,nm,bl,ir,la);
             cout<<"\nAccount Added Successfully!\n";
         }
         else if(ch==2){
