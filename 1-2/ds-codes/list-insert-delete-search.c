@@ -6,25 +6,27 @@ typedef struct node {
     struct node* next;
 } node;
 
-void create(node** start, int n) {
-    node* ptr = *start;
-    printf("\nEnter elements: ");
+node* create(int d) {
+    node* new = (node*)malloc(sizeof(node));
 
-    for (int i = 0; i < n; i++) {
-        int item;
-        scanf("%d", &item);
+    new->data = d;
+    new->next = NULL;
+    return new;
+}
 
-        node* new = (node*)malloc(sizeof(node));
-        new->data = item;
-        new->next = NULL;
-        
-        if (ptr == NULL) {
-            *start = new;
-        } else {
-            ptr->next = new;
-        }
-        ptr = new;
+node* add(int d) {
+    if (d == -1) {
+        return NULL;
     }
+
+    node* start = create(d);
+
+    int nd;
+    printf("Enter next element (-1 to skip): ");
+    scanf("%d", &nd);
+
+    start->next = add(nd);
+    return start;
 }
 
 void print(node* start) {
@@ -57,6 +59,69 @@ node* search(node* start, int item) {
     return NULL;
 }
 
+int length(node* start) {
+    int len = 0;
+    node* ptr = start;
+
+    while (ptr != NULL) {
+        len++;
+        ptr = ptr->next;
+    }
+
+    return len;
+}
+
+void insert(node** start, int index, int item) {
+    int len = length(*start);
+    if (index < 0 || index > len) {
+        printf("\nInvalid index\n");
+        return;
+    }
+
+    node* new = create(item);
+
+    if (index == 0) {
+        new->next = *start;
+        *start = new;
+        return;
+    }
+
+    node* locp = *start;
+    for (int i = 0; i < index - 1; i++) {
+        locp = locp->next;
+    }
+
+    new->next = locp->next;
+    locp->next = new;
+}
+
+void delete(node** start, int index) {
+    int len = length(*start);
+    if (index < 0 || index >= len) {
+        printf("\nInvalid index\n");
+        return;
+    }
+
+    node* loc;
+
+    if (index == 0) {
+        loc = *start;
+        *start = loc->next;
+        free(loc);
+
+        return;
+    }
+
+    node* locp = *start;
+    for (int i = 0; i < index - 1; i++) {
+        locp = locp->next;
+    }
+
+    loc = locp->next;
+    locp->next = loc->next;
+    free(loc);
+}
+
 int main() {
     node* start = NULL;
 
@@ -74,11 +139,11 @@ int main() {
         scanf("%d", &x);
 
         if (x == 1) {
-            int n;
-            printf("\nEnter number of elements: ");
-            scanf("%d", &n);
+            int sd;
+            printf("\nEnter first element (-1 to skip): ");
+            scanf("%d", &sd);
 
-            create(&start, n);
+            start = add(sd);
         } else if (x == 2) {
             int item;
             printf("\nEnter search item: ");
@@ -91,6 +156,25 @@ int main() {
             } else {
                 printf("\nFound at: %p\n", loc);
             }
+        } else if (x == 3) {
+            int item, index;
+            printf("\nEnter index and item to insert: ");
+            scanf("%d%d", &index, &item);
+
+            insert(&start, index, item);
+        } else if (x == 4) {
+            int index;
+            printf("\nEnter index to delete: ");
+            scanf("%d", &index);
+
+            delete(&start, index);
+        } else if (x == 5) {
+            break;
+        } else {
+            printf("\nInvalid choice\n");
         }
     }
+
+    destroy(start);
+    return 0;
 }

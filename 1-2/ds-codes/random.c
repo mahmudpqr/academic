@@ -63,16 +63,18 @@ _Bool armstrong(int n) {
 }
 
 _Bool palindrome(char a[], int n) {
-    char b[n + 1];
-    for (int i = 0; i < n; i++) {
-        b[i] = a[n - 1 - i];
-    }
-    b[n] = '\0';
+    int left = 0, right = n - 1;
 
-    if(strcmp(a, b) == 0) {
-        return 1;
+    while (left <= right) {
+        if (a[left] != a[right]) {
+            return 0;
+        }
+
+        left++;
+        right--;
     }
-    return 0;
+
+    return 1;
 }
 
 int main() {
@@ -132,9 +134,10 @@ int main() {
             printf("\nEnter string length: ");
             scanf("%d", &n);
 
-            char a[n];
+            char a[n+1];
             printf("Enter string: ");
-            scanf("%s", a);
+            getchar();
+            fgets(a, sizeof(a), stdin);
             
             if (palindrome(a, n)) {
                 printf("\n%s is palindrome\n", a);
