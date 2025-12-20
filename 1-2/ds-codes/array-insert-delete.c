@@ -1,13 +1,13 @@
 #include <stdio.h>
 
 void insert(int a[], int* n, int max, int loc, int item) {
-    if (*n == max) {
-        printf ("\nOverflow\n");
+    if (loc < 0 || loc > *n || *n == max) {
+        printf ("\nInvalid index\n");
         return;
     }
 
-    for (int i = *n; i >= loc; i--) {
-        a[i + 1] = a[i];
+    for (int i = *n; i > loc; i--) {
+        a[i] = a[i - 1];
     }
 
     a[loc] = item;
@@ -15,12 +15,12 @@ void insert(int a[], int* n, int max, int loc, int item) {
 }
 
 void delete(int a[], int* n, int loc) {
-    if (*n == 0) {
-        printf("\nUnderflow\n");
+    if (loc < 0 || loc >= *n) {
+        printf("\nInvalid index\n");
         return;
     }
 
-    for (int i = loc; i < *n; i++) {
+    for (int i = loc; i < *n - 1; i++) {
         a[i] = a[i + 1];
     }
 
