@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <math.h>
-#include <string.h>
 
 int fact_it(int n) {
     int fact = 1;
@@ -152,4 +151,5 @@ int main() {
     }
 
     return 0;
+
 }
