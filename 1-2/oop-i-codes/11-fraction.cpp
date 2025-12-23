@@ -38,13 +38,13 @@ class fraction {
         cout << num << "/" << den;
     }
 
-    friend fraction operator+(fraction& a, fraction b);
-    friend fraction operator-(fraction& a, fraction b);
-    friend fraction operator*(fraction& a, fraction b);
-    friend fraction operator/(fraction& a, fraction b);
+    friend fraction operator+(fraction& a, fraction& b);
+    friend fraction operator-(fraction& a, fraction& b);
+    friend fraction operator*(fraction& a, fraction& b);
+    friend fraction operator/(fraction& a, fraction& b);
 };
 
-fraction operator+(fraction& a, fraction b) {
+fraction operator+(fraction& a, fraction& b) {
     fraction temp;
 
     temp.den = a.den * b.den;
@@ -59,7 +59,7 @@ fraction operator+(fraction& a, fraction b) {
     return temp;
 }
 
-fraction operator-(fraction& a, fraction b) {
+fraction operator-(fraction& a, fraction& b) {
     fraction temp;
 
     temp.den = a.den * b.den;
@@ -74,7 +74,7 @@ fraction operator-(fraction& a, fraction b) {
     return temp;
 }
 
-fraction operator*(fraction& a, fraction b) {
+fraction operator*(fraction& a, fraction& b) {
     fraction temp;
 
     temp.den = a.den * b.den;
@@ -89,7 +89,7 @@ fraction operator*(fraction& a, fraction b) {
     return temp;
 }
 
-fraction operator/(fraction& a, fraction b) {
+fraction operator/(fraction& a, fraction& b) {
     fraction temp;
 
     temp.den = a.den * b.num;
