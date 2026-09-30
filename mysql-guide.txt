@@ -49,13 +49,16 @@ ALTER TABLE table_name
 CHANGE COLUMN old_name new_name newDataType;
 
 ALTER TABLE table_name
-MODIFY COLUMN column_name newDataType;
+MODIFY COLUMN column_name newDataType [position];
 
 ALTER TABLE table_name
-ADD column_name dataType;
+ADD column_name dataType [position];
 
 ALTER TABLE table_name
 DROP COLUMN column_name;
+
+positions:
+FIRST / AFTER column_name
 
 ==================== auto increment ====================
 
@@ -68,7 +71,7 @@ ALTER TABLE table_name
 MODIFY COLUMN column_name dataType AUTO_INCREMENT;
 
 ALTER TABLE table_name
-AUTO_INCREMENT = newValue;
+AUTO_INCREMENT = value;
 
 ==================== not null ====================
 
@@ -85,11 +88,11 @@ MODIFY column_name dataType NULL;
 ==================== default ====================
 
 CREATE TABLE table_name (
-    column_name dataType DEFAULT defaultValue
+    column_name dataType DEFAULT value
 );
 
 ALTER TABLE table_name
-ALTER COLUMN column_name SET DEFAULT defaultValue;
+ALTER COLUMN column_name SET DEFAULT value;
 
 ALTER TABLE table_name
 ALTER COLUMN column_name DROP DEFAULT;
@@ -178,12 +181,24 @@ DROP FOREIGN KEY constraint_name;
 cascading actions:
 ON DELETE/UPDATE CASCADE / RESTRICT / NO ACTION / SET NULL
 
-==================== insert ====================
+==================== manipulation ====================
 
-INSERT INTO table_name 
-VALUES (value1, value2), (value1, value2); 
-
-INSERT INTO table_name (column1, column2)
+INSERT INTO table_name [(column1, column2)]
 VALUES (value1, value2), (value1, value2);
 
-SELECT * FROM table_name
+UPDATE table_name
+SET column1 = value1, column2 = value2
+[WHERE condition];
+
+DELETE FROM table_name 
+[WHERE condition];
+
+==================== select ====================
+
+SELECT arithmeticExpression;
+
+SELECT * FROM table_name;
+
+SELECT [DISTINCT] column1, column2
+FROM table_name
+[WHERE condition];
