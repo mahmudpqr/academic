@@ -1,0 +1,179 @@
+==================== access ====================
+
+mysql -u root -p
+exit/quit
+
+==================== databases ====================
+
+CREATE DATABASE [IF NOT EXISTS] databaseName;
+DROP DATABASE [IF EXISTS] databaseName;
+
+SHOW DATABASES;
+USE databaseName;
+
+==================== tables ====================
+
+CREATE TABLE [IF NOT EXISTS] tableName
+(
+    column1 dataType,
+    column2 dataType
+);
+
+SHOW TABLES; 
+DESCRIBE tableName;
+SHOW CREATE TABLE tableName;
+
+DROP TABLE [IF EXISTS] tableName;
+TRUNCATE TABLE tableName;
+RENAME TABLE oldTable1 TO newTable1, oldTable2 TO newTable2;
+
+ALTER TABLE tableName
+RENAME TO newName;
+
+==================== columns ====================
+
+ALTER TABLE tableName
+RENAME COLUMN oldName TO newName;
+
+ALTER TABLE tableName
+CHANGE COLUMN oldName newName newDataType;
+
+ALTER TABLE tableName
+MODIFY COLUMN columnName newDataType;
+
+ALTER TABLE tableName
+ADD columnName dataType;
+
+ALTER TABLE tableName
+DROP COLUMN columnName;
+
+==================== auto increment ====================
+
+CREATE TABLE tableName
+(
+    columnName dataType AUTO_INCREMENT
+);
+
+ALTER TABLE tableName
+MODIFY COLUMN columnName dataType AUTO_INCREMENT;
+
+ALTER TABLE tableName
+AUTO_INCREMENT = newValue;
+
+==================== not null ====================
+
+CREATE TABLE tableName (
+    columnName dataType NOT NULL
+);
+
+ALTER TABLE tableName
+MODIFY columnName dataType NOT NULL;
+
+ALTER TABLE tableName
+MODIFY columnName dataType NULL;
+
+==================== default ====================
+
+CREATE TABLE tableName (
+    columnName dataType DEFAULT defaultValue
+);
+
+ALTER TABLE tableName
+ALTER COLUMN columnName SET DEFAULT defaultValue;
+
+ALTER TABLE tableName
+ALTER COLUMN columnName DROP DEFAULT;
+
+==================== check ====================
+
+CREATE TABLE tableName (
+    columnName dataType CHECK (condition)
+);
+
+CREATE TABLE tableName (
+    columnName dataType,
+    [CONSTRAINT constraintName] CHECK (condition)
+);
+
+ALTER TABLE tablenName
+ADD [CONSTRAINT constraintName] CHECK (condition);
+
+ALTER TABLE tableName
+DROP CHECK constraintName;
+
+==================== unique ====================
+
+CREATE TABLE tableName (
+    columnName dataType UNIQUE
+);
+
+CREATE TABLE tableName
+(
+    column1 dataType,
+    column2 dataType,
+
+    [CONSTRAINT constraintName] UNIQUE (column1, column2)
+);
+
+ALTER TABLE tableName
+ADD [CONSTRAINT constraintName] UNIQUE (column1, column2);
+
+ALTER TABLE tableName
+DROP INDEX constraintName;
+
+==================== primary key ====================
+
+CREATE TABLE tableName (
+    columnName dataType PRIMARY KEY
+);
+
+CREATE TABLE tableName
+(
+    column1 dataType,
+    column2 dataType,
+
+    [CONSTRAINT constraintName] PRIMARY KEY (column1, column2)
+);
+
+ALTER TABLE tableName
+ADD [CONSTRAINT constraintName] PRIMARY KEY (column1, column2);
+
+ALTER TABLE tableName
+DROP PRIMARY KEY;
+
+==================== foreign key ====================
+
+CREATE TABLE tableName (
+    columnName dataType REFERENCES parentTable(parentColumn)
+);
+
+CREATE TABLE tableName
+(
+    column1 dataType,
+    column2 dataType,
+
+    [CONSTRAINT constraintName] FOREIGN KEY (column1, column2)
+    REFERENCES parentTable(parentColumn1, parentColumn2)
+    [cascading actions]
+);
+
+ALTER TABLE tableName
+ADD [CONSTRAINT constraintName] FOREIGN KEY (column1, column2)
+REFERENCES parentTable(parentColumn1, parentColumn2);
+[cascading actions]
+
+ALTER TABLE tableName
+DROP FOREIGN KEY constraintName;
+
+cascading actions:
+ON DELETE/UPDATE CASCADE / RESTRICT / NO ACTION / SET NULL
+
+==================== insert ====================
+
+INSERT INTO tableName 
+VALUES (value1, value2), (value1, value2); 
+
+INSERT INTO tableName (column1, column2)
+VALUES (value1, value2), (value1, value2);
+
+SELECT * FROM tableName
