@@ -1,7 +1,7 @@
-==================== misc ====================
+========================= misc =========================
 
 mysql -u root -p
-quit/exit, \q, \c
+CLEAR, HELP, QUIT /EXIT
 
 -- comment
 #  comment
@@ -10,10 +10,19 @@ quit/exit, \q, \c
 naming: snake_case
 table: plural
 column: singular
-constraint and index: prefix_table_column
+constraint, index: prefix_table_column
 prefix: pk, fk, uq, chk, idx
 
-==================== databases ====================
+data types:
+integer:[UNSIGNED] TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT
+decimal: DECIMAL(M, D), FLOAT, DOUBLE
+string: CHAR(M), VARCHAR(M)
+binary: BINARY(M), VARBINARY(M)
+text: TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT
+time: DATE, TIME, DATETIME, TIMESTAMP, YEAR
+boolean: BOOL / TINYINT(1)
+
+========================= databases =========================
 
 CREATE DATABASE [IF NOT EXISTS] database_name;
 DROP DATABASE [IF EXISTS] database_name;
@@ -21,7 +30,7 @@ DROP DATABASE [IF EXISTS] database_name;
 SHOW DATABASES;
 USE database_name;
 
-==================== tables ====================
+========================= tables =========================
 
 CREATE TABLE [IF NOT EXISTS] table_name
 (
@@ -40,7 +49,7 @@ RENAME TABLE old_table1 TO new_table1, old_table2 TO new_table2;
 ALTER TABLE table_name
 RENAME TO new_name;
 
-==================== columns ====================
+========================= columns =========================
 
 ALTER TABLE table_name
 RENAME COLUMN old_name TO new_name;
@@ -57,10 +66,9 @@ ADD column_name dataType [position];
 ALTER TABLE table_name
 DROP COLUMN column_name;
 
-positions:
-FIRST / AFTER column_name
+positions: FIRST, AFTER column_name
 
-==================== auto increment ====================
+========================= auto increment =========================
 
 CREATE TABLE table_name
 (
@@ -71,9 +79,9 @@ ALTER TABLE table_name
 MODIFY COLUMN column_name dataType AUTO_INCREMENT;
 
 ALTER TABLE table_name
-AUTO_INCREMENT = value;
+AUTO_INCREMENT = startingValue;
 
-==================== not null ====================
+========================= not null =========================
 
 CREATE TABLE table_name (
     column_name dataType NOT NULL
@@ -85,7 +93,7 @@ MODIFY column_name dataType NOT NULL;
 ALTER TABLE table_name
 MODIFY column_name dataType NULL;
 
-==================== default ====================
+========================= default =========================
 
 CREATE TABLE table_name (
     column_name dataType DEFAULT value
@@ -97,7 +105,7 @@ ALTER COLUMN column_name SET DEFAULT value;
 ALTER TABLE table_name
 ALTER COLUMN column_name DROP DEFAULT;
 
-==================== check ====================
+========================= check =========================
 
 CREATE TABLE table_name (
     column_name dataType CHECK (condition)
@@ -114,7 +122,7 @@ ADD [CONSTRAINT constraint_name] CHECK (condition);
 ALTER TABLE table_name
 DROP CHECK constraint_name;
 
-==================== unique ====================
+========================= unique =========================
 
 CREATE TABLE table_name (
     column_name dataType UNIQUE
@@ -134,7 +142,7 @@ ADD [CONSTRAINT constraint_name] UNIQUE (column1, column2);
 ALTER TABLE table_name
 DROP INDEX constraint_name;
 
-==================== primary key ====================
+========================= primary key =========================
 
 CREATE TABLE table_name (
     column_name dataType PRIMARY KEY
@@ -154,10 +162,11 @@ ADD [CONSTRAINT constraint_name] PRIMARY KEY (column1, column2);
 ALTER TABLE table_name
 DROP PRIMARY KEY;
 
-==================== foreign key ====================
+========================= foreign key =========================
 
 CREATE TABLE table_name (
-    column_name dataType REFERENCES parentTable(parentColumn)
+    column_name dataType REFERENCES parent_table(parent_column)
+    [cascadingAction]???
 );
 
 CREATE TABLE table_name
@@ -166,39 +175,86 @@ CREATE TABLE table_name
     column2 dataType,
 
     [CONSTRAINT constraint_name] FOREIGN KEY (column1, column2)
-    REFERENCES parentTable(parentColumn1, parentColumn2)
-    [cascading actions]
+    REFERENCES parent_table(parent_column1, parent_column2)
+    [ON DELETE cascadingAction]
+    [ON UPDATE cascadingAction]
 );
 
 ALTER TABLE table_name
 ADD [CONSTRAINT constraint_name] FOREIGN KEY (column1, column2)
-REFERENCES parentTable(parentColumn1, parentColumn2);
-[cascading actions]
+REFERENCES parent_table(parent_column1, parent_column2);
+[ON DELETE cascadingAction]
+[ON UPDATE cascadingAction]
 
 ALTER TABLE table_name
 DROP FOREIGN KEY constraint_name;
 
-cascading actions:
-ON DELETE/UPDATE CASCADE / RESTRICT / NO ACTION / SET NULL
+cascading actions: CASCADE, RESTRICT, NO ACTION, SET NULL
 
-==================== manipulation ====================
+========================= insert, delete, update =========================
 
 INSERT INTO table_name [(column1, column2)]
 VALUES (value1, value2), (value1, value2);
+
+DELETE FROM table_name 
+[WHERE condition];
 
 UPDATE table_name
 SET column1 = value1, column2 = value2
 [WHERE condition];
 
-DELETE FROM table_name 
-[WHERE condition];
+========================= select, clauses =========================
 
-==================== select ====================
-
-SELECT arithmeticExpression;
+SELECT expression [AS alias];
 
 SELECT * FROM table_name;
 
 SELECT [DISTINCT] column1, column2
 FROM table_name
 [WHERE condition];
+
+operators: =, <, >, <=, >=, <>, BETWEEN, LIKE, IN, AND, OR, NOT
+
+SELECT column1, column2, aggregateFunction(column_name) [AS alias]
+FROM table_name
+[WHERE condition]
+GROUP BY column1, column2;
+[HAVING aggregateCondition]
+
+SELECT column1, column2
+FROM table_name
+[WHERE condition]
+ORDER BY column1 [ASC/DESC], column2 [ASC/DESC];
+
+SELECT column1, column2
+FROM table_name
+[WHERE condition]
+LIMIT [offset,] rowCount;
+
+========================= aggregate functions =========================
+
+SELECT column1, column2, aggregateFunction(column_name) [AS alias]
+FROM table_name
+[WHERE condition]
+GROUP BY column1, column2;
+[HAVING aggregateCondition]
+
+SELECT COUNT(*) [AS alias]
+FROM table_name
+
+SELECT COUNT([DISTINCT] column_name) [AS alias]
+FROM table_name
+
+SELECT SUM([DISTINCT] column_name) [AS alias]
+FROM table_name
+
+SELECT MIN(column_name) [AS alias]
+FROM table_name;
+
+SELECT MAX(column_name) [AS alias]
+FROM table_name;
+
+SELECT AVG(column1) [AS alias1], AVG(column2) [AS alias2]
+FROM table_name;
+
+========================= end =========================
