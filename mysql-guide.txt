@@ -1,7 +1,7 @@
 ========================= misc =========================
 
 mysql -u root -p
-CLEAR, HELP, QUIT /EXIT
+CLEAR, HELP, QUIT
 
 -- comment
 #  comment
@@ -13,14 +13,14 @@ column: singular
 constraint, index: prefix_table_column
 prefix: pk, fk, uq, chk, idx
 
-data types:
 integer:[UNSIGNED] TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT
 decimal: DECIMAL(M, D), FLOAT, DOUBLE
 string: CHAR(M), VARCHAR(M)
 binary: BINARY(M), VARBINARY(M)
 text: TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT
+blob: TINYBLOB, BLOB, MEDIUMBLOB, LONGBLOB
 time: DATE, TIME, DATETIME, TIMESTAMP, YEAR
-boolean: BOOL / TINYINT(1)
+boolean: BOOL (TINYINT(1))
 
 ========================= databases =========================
 
