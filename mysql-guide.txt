@@ -1,7 +1,7 @@
 ========================= misc =========================
 
 mysql -u root -p
-CLEAR, HELP, QUIT
+help (\?), clear (\c), quit (\q)
 
 -- comment
 #  comment
@@ -22,6 +22,13 @@ blob: TINYBLOB, BLOB, MEDIUMBLOB, LONGBLOB
 time: DATE, TIME, DATETIME, TIMESTAMP, YEAR
 boolean: BOOL (TINYINT(1))
 
+arithmetic: +, -, *, /, %, DIV, MOD
+comparison: =, !=, <>, <, >, <=, >=, <=>, IS
+logical: AND, OR, NOT
+special: BETWEEN, IN, LIKE, REGEXP, EXISTS, ANY, ALL
+combine: UNION, INTERSECT, EXCEPT
+bitwise: &, |, ^, ~, <<, >>
+
 ========================= databases =========================
 
 CREATE DATABASE [IF NOT EXISTS] database_name;
@@ -41,10 +48,11 @@ CREATE TABLE [IF NOT EXISTS] table_name
 SHOW TABLES; 
 DESCRIBE table_name;
 SHOW CREATE TABLE table_name;
+SHOW INDEX FROM table_name;
 
 DROP TABLE [IF EXISTS] table_name;
 TRUNCATE TABLE table_name;
-RENAME TABLE old_table1 TO new_table1, old_table2 TO new_table2;
+RENAME TABLE old_name TO new_name;
 
 ALTER TABLE table_name
 RENAME TO new_name;
@@ -52,40 +60,48 @@ RENAME TO new_name;
 ========================= columns =========================
 
 ALTER TABLE table_name
-RENAME COLUMN old_name TO new_name;
+ADD column_name dataType [constraints] [position];
 
 ALTER TABLE table_name
-CHANGE COLUMN old_name new_name newDataType;
+DROP column_name;
 
 ALTER TABLE table_name
-MODIFY COLUMN column_name newDataType [position];
+CHANGE old_name new_name newDataType [constraints] [position];
 
 ALTER TABLE table_name
-ADD column_name dataType [position];
-
-ALTER TABLE table_name
-DROP COLUMN column_name;
+MODIFY column_name newDataType [constraints] [position];
 
 positions: FIRST, AFTER column_name
+column-level: AUTO_INCREMENT, NOT NULL, DEFAULT
+table-level: CHECK, UNIQUE, PRIMARY KEY, FOREIGN KEY
 
 ========================= auto increment =========================
 
 CREATE TABLE table_name
 (
-    column_name dataType AUTO_INCREMENT
+    column_name dataType UNIQUE / PRIMARY KEY AUTO_INCREMENT
 );
 
 ALTER TABLE table_name
-MODIFY COLUMN column_name dataType AUTO_INCREMENT;
+ADD column_name dataType AUTO_INCREMENT;
+
+ALTER TABLE table_name
+MODIFY column_name dataType AUTO_INCREMENT;
 
 ALTER TABLE table_name
 AUTO_INCREMENT = startingValue;
+
+ALTER TABLE table_name
+MODIFY column_name dataType;
 
 ========================= not null =========================
 
 CREATE TABLE table_name (
     column_name dataType NOT NULL
 );
+
+ALTER TABLE table_name
+ADD column_name dataType NOT NULL;
 
 ALTER TABLE table_name
 MODIFY column_name dataType NOT NULL;
@@ -100,16 +116,25 @@ CREATE TABLE table_name (
 );
 
 ALTER TABLE table_name
-ALTER COLUMN column_name SET DEFAULT value;
+ADD column_name dataType DEFAULT value;
 
 ALTER TABLE table_name
-ALTER COLUMN column_name DROP DEFAULT;
+ALTER column_name SET DEFAULT value;
+
+ALTER TABLE table_name
+ALTER column_name DROP DEFAULT;
 
 ========================= check =========================
 
 CREATE TABLE table_name (
     column_name dataType CHECK (condition)
 );
+
+ALTER TABLE table_name
+ADD column_name dataType CHECK (condition);
+
+ALTER TABLE table_name
+MODIFY column_name dataType CHECK (condition);
 
 CREATE TABLE table_name (
     column_name dataType,
@@ -120,13 +145,16 @@ ALTER TABLE table_name
 ADD [CONSTRAINT constraint_name] CHECK (condition);
 
 ALTER TABLE table_name
-DROP CHECK constraint_name;
+DROP CONSTRAINT/CHECK constraint_name;
 
 ========================= unique =========================
 
 CREATE TABLE table_name (
     column_name dataType UNIQUE
 );
+
+ALTER TABLE table_name
+ADD column_name dataType UNIQUE;
 
 CREATE TABLE table_name
 (
@@ -140,7 +168,9 @@ ALTER TABLE table_name
 ADD [CONSTRAINT constraint_name] UNIQUE (column1, column2);
 
 ALTER TABLE table_name
-DROP INDEX constraint_name;
+DROP CONSTRAINT/INDEX constraint_name;
+
+DROP INDEX constraint_name ON table_name;
 
 ========================= primary key =========================
 
@@ -164,30 +194,25 @@ DROP PRIMARY KEY;
 
 ========================= foreign key =========================
 
-CREATE TABLE table_name (
-    column_name dataType REFERENCES parent_table(parent_column)
-    [cascadingAction]???
-);
-
 CREATE TABLE table_name
 (
     column1 dataType,
     column2 dataType,
 
     [CONSTRAINT constraint_name] FOREIGN KEY (column1, column2)
-    REFERENCES parent_table(parent_column1, parent_column2)
+    REFERENCES parent_table (parent_column1, parent_column2)
     [ON DELETE cascadingAction]
     [ON UPDATE cascadingAction]
 );
 
 ALTER TABLE table_name
 ADD [CONSTRAINT constraint_name] FOREIGN KEY (column1, column2)
-REFERENCES parent_table(parent_column1, parent_column2);
+REFERENCES parent_table(parent_column1, parent_column2)
 [ON DELETE cascadingAction]
-[ON UPDATE cascadingAction]
+[ON UPDATE cascadingAction];
 
 ALTER TABLE table_name
-DROP FOREIGN KEY constraint_name;
+DROP CONSTRAINT / FOREIGN KEY constraint_name;
 
 cascading actions: CASCADE, RESTRICT, NO ACTION, SET NULL
 
@@ -213,13 +238,13 @@ SELECT [DISTINCT] column1, column2
 FROM table_name
 [WHERE condition];
 
-operators: =, <, >, <=, >=, <>, BETWEEN, LIKE, IN, AND, OR, NOT
+operators: =, !=, <>, <, >, <=, >=, BETWEEN, LIKE, IN, AND, OR, NOT
 
 SELECT column1, column2, aggregateFunction(column_name) [AS alias]
 FROM table_name
 [WHERE condition]
-GROUP BY column1, column2;
-[HAVING aggregateCondition]
+GROUP BY column1, column2
+[HAVING aggregateCondition];
 
 SELECT column1, column2
 FROM table_name
@@ -232,12 +257,6 @@ FROM table_name
 LIMIT [offset,] rowCount;
 
 ========================= aggregate functions =========================
-
-SELECT column1, column2, aggregateFunction(column_name) [AS alias]
-FROM table_name
-[WHERE condition]
-GROUP BY column1, column2;
-[HAVING aggregateCondition]
 
 SELECT COUNT(*) [AS alias]
 FROM table_name
@@ -254,7 +273,41 @@ FROM table_name;
 SELECT MAX(column_name) [AS alias]
 FROM table_name;
 
-SELECT AVG(column1) [AS alias1], AVG(column2) [AS alias2]
+SELECT AVG(column_name) [AS alias]
 FROM table_name;
+
+========================= join =========================
+
+SELECT columns...
+FROM table1, table2
+[where table1.column_name = table2.column_name];
+
+SELECT columns...
+FROM table1
+CROSS JOIN table2;
+
+SELECT columns...
+FROM table1
+NATURAL JOIN table2;
+
+SELECT columns...
+FROM table1
+INNER JOIN table2
+ON table1.column_name = table2.column_name
+[\ USING (column_name)];
+
+SELECT columns...
+FROM table1
+LEFT/RIGHT JOIN table2 
+ON table1.column_name = table2.column_name
+[\ USING (column_name)];
+
+SELECT columns...
+FROM table_name a
+INNER/LEFT JOIN table_name b
+ON a.column_name = b.column_name
+[\ USING (column_name)];
+
+full join: UNION of left and right join
 
 ========================= end =========================
