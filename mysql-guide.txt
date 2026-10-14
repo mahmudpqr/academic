@@ -83,7 +83,7 @@ CREATE TABLE table_name
 );
 
 ALTER TABLE table_name
-ADD column_name dataType AUTO_INCREMENT;
+ADD column_name dataType UNIQUE / PRIMARY KEY AUTO_INCREMENT;
 
 ALTER TABLE table_name
 MODIFY column_name dataType AUTO_INCREMENT;
@@ -117,6 +117,9 @@ CREATE TABLE table_name (
 
 ALTER TABLE table_name
 ADD column_name dataType DEFAULT value;
+
+ALTER TABLE table_name
+MODIFY column_name dataType DEFAULT value;
 
 ALTER TABLE table_name
 ALTER column_name SET DEFAULT value;
