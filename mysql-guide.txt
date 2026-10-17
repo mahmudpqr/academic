@@ -13,8 +13,9 @@ column: singular
 constraint, index: prefix_table_column
 prefix: pk, fk, uq, chk, idx
 
-integer:[UNSIGNED] TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT
-decimal: DECIMAL(M, D), FLOAT, DOUBLE
+integer: [UNSIGNED] TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT
+fixed: DECIMAL(M, D)
+float: FLOAT, DOUBLE
 string: CHAR(M), VARCHAR(M)
 binary: BINARY(M), VARBINARY(M)
 text: TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT
@@ -79,20 +80,26 @@ table-level: CHECK, UNIQUE, PRIMARY KEY, FOREIGN KEY
 
 CREATE TABLE table_name
 (
-    column_name dataType UNIQUE / PRIMARY KEY AUTO_INCREMENT
+    column_name dataType constraints AUTO_INCREMENT
 );
 
 ALTER TABLE table_name
-ADD column_name dataType UNIQUE / PRIMARY KEY AUTO_INCREMENT;
+ADD column_name dataType constraint AUTO_INCREMENT;
 
 ALTER TABLE table_name
 MODIFY column_name dataType AUTO_INCREMENT;
 
 ALTER TABLE table_name
-AUTO_INCREMENT = startingValue;
+AUTO_INCREMENT = nextValue;
 
 ALTER TABLE table_name
 MODIFY column_name dataType;
+
+data types: [UNSIGNED] integers
+constraints: PRIMARY KEY, UNIQUE NOT NULL
+gaps: delete, failed insert, transaction rollback
+counter unchanged: inserting null or value < max, setting next value < max
+counter changed: inserting value > max, setting next value > max
 
 ========================= not null =========================
 
@@ -108,6 +115,8 @@ MODIFY column_name dataType NOT NULL;
 
 ALTER TABLE table_name
 MODIFY column_name dataType NULL;
+
+quirk: empty strings are not null
 
 ========================= default =========================
 
@@ -175,6 +184,8 @@ DROP CONSTRAINT/INDEX constraint_name;
 
 DROP INDEX constraint_name ON table_name;
 
+quirk: allows multiple nulls
+
 ========================= primary key =========================
 
 CREATE TABLE table_name (
@@ -194,6 +205,8 @@ ADD [CONSTRAINT constraint_name] PRIMARY KEY (column1, column2);
 
 ALTER TABLE table_name
 DROP PRIMARY KEY;
+
+quirk: does not allow duplicates or nulls
 
 ========================= foreign key =========================
 
@@ -218,6 +231,7 @@ ALTER TABLE table_name
 DROP CONSTRAINT / FOREIGN KEY constraint_name;
 
 cascading actions: CASCADE, RESTRICT, NO ACTION, SET NULL
+quirk: does not allow new values in child's foreign key column
 
 ========================= insert, delete, update =========================
 
@@ -230,6 +244,8 @@ DELETE FROM table_name
 UPDATE table_name
 SET column1 = value1, column2 = value2
 [WHERE condition];
+
+quirk: always use WHERE in delete and update
 
 ========================= select, clauses =========================
 
@@ -312,5 +328,8 @@ ON a.column_name = b.column_name
 [\ USING (column_name)];
 
 full join: UNION of left and right join
+quirk: 
 
 ========================= end =========================
+
+pattern matching, time functions
